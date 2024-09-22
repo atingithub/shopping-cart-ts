@@ -1,26 +1,35 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { AuthProvider, useAuth } from './components/AuthProvider';
+import { CartProvider } from './components/CartProvider';
+import Login from './components/Login';
+import ProductList from './components/ProductList';
+import Cart from './components/Cart';
+import Navbar from './components/Navbar';
 
-function App() {
+const MainApp: React.FC = () => {
+  return (
+    <CartProvider>
+      <Navbar />
+      <ProductList />
+      <Cart />
+    </CartProvider>
+  );
+};
+
+const App: React.FC = () => {
+  const { token } = useAuth();
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {token ? <MainApp /> : <Login />}
     </div>
   );
-}
+};
 
-export default App;
+const WrappedApp: React.FC = () => (
+  <AuthProvider>
+    <App />
+  </AuthProvider>
+);
+
+export default WrappedApp;
